@@ -1,0 +1,10 @@
+package:
+  name: rtl_primitive
+  authors:
+    - "Shota <tyuntune@gmail.com>"
+
+dependencies:
+
+sources:
+  - pkg/macro_pkg.sv
+  - rtl/fifo.sv
