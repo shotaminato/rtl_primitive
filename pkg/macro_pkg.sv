@@ -18,4 +18,15 @@ package macro_pkg;
         end \
     end
 
+`define DFFR_VAL(__q, __d, __en, __clk, __rst_n, __val) \
+    always_ff @(posedge __clk or negedge __rst_n) begin \
+        if (!__rst_n) begin \
+            {__q} <= __val; \
+        end else begin \
+            if ({__en}) begin \
+                {__q} <= {__d}; \
+            end \
+        end \
+    end
+
 endpackage
