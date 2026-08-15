@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module fifo #(
     parameter WIDTH = 8,
     parameter DEPTH = 16
@@ -13,20 +15,25 @@ module fifo #(
     output logic [WIDTH-1:0] o_rdata
 );
 
+    localparam int PTR_WIDTH   = (DEPTH <= 1) ? 1 : $clog2(DEPTH);
+    localparam int COUNT_WIDTH = $clog2(DEPTH) + 1;
+
     logic [WIDTH-1:0] mem [DEPTH];
     genvar gi;
-    logic [$clog2(DEPTH)-1:0] wr_ptr;
-    logic [$clog2(DEPTH)-1:0] rd_ptr;
-    logic [$clog2(DEPTH)-1:0] wr_ptr_next;
-    logic [$clog2(DEPTH)-1:0] rd_ptr_next;
+    logic [PTR_WIDTH-1:0] wr_ptr;
+    logic [PTR_WIDTH-1:0] rd_ptr;
+    logic [PTR_WIDTH-1:0] wr_ptr_next;
+    logic [PTR_WIDTH-1:0] rd_ptr_next;
 
-    logic [$clog2(DEPTH):0] count;
-    logic [$clog2(DEPTH):0] count_next;
+    logic [COUNT_WIDTH-1:0] count;
+    logic [COUNT_WIDTH-1:0] count_next;
 
-    assign count_next = count + i_wvalid - (i_rready & o_rvalid);
+    assign count_next =
+        count + COUNT_WIDTH'(i_wvalid) - COUNT_WIDTH'(i_rready & o_rvalid);
     `DFFR(count, count_next, 1'b1, i_clk, i_rst_n)
 
-    assign wr_ptr_next = $clog2(DEPTH)'((wr_ptr == DEPTH - 1) ? '0 : wr_ptr + 1);
+    assign wr_ptr_next =
+        (wr_ptr == PTR_WIDTH'(DEPTH - 1)) ? '0 : wr_ptr + PTR_WIDTH'(1);
     `DFFR(wr_ptr, wr_ptr_next, (i_wvalid & o_wready), i_clk, i_rst_n)
 
     generate
@@ -39,7 +46,8 @@ module fifo #(
     assign o_rvalid = count > 0;
     assign o_wready = (count < DEPTH);
 
-    assign rd_ptr_next = $clog2(DEPTH)'((rd_ptr == DEPTH - 1) ? '0 : rd_ptr + 1);
+    assign rd_ptr_next =
+        (rd_ptr == PTR_WIDTH'(DEPTH - 1)) ? '0 : rd_ptr + PTR_WIDTH'(1);
     `DFFR(rd_ptr, rd_ptr_next, i_rready & o_rvalid, i_clk, i_rst_n)
 
 endmodule

@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 // This file is not needed to be imported in any other file. It is used to define the macros for the project.
 
 package macro_pkg;

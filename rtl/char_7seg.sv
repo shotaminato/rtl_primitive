@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module char_7seg #(
     parameter DATA_WIDTH = 8
 ) (
