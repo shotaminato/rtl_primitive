@@ -8,5 +8,6 @@ dependencies:
 sources:
   - pkg/macro_pkg.sv
   - rtl/dff.sv
+  - rtl/clock_gate.sv
   - rtl/fifo.sv
   - rtl/char_7seg.sv
