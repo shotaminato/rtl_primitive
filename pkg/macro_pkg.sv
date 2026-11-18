@@ -1,8 +1,6 @@
 `timescale 1ns/1ps
 
-// This file is not needed to be imported in any other file. It is used to define the macros for the project.
-
-package macro_pkg;
+// Preprocessor macros must live outside any package so all translation units see them.
 
 `define DFF(__q, __d, __en, __clk) \
     always_ff @(posedge __clk) begin \
@@ -31,4 +29,5 @@ package macro_pkg;
         end \
     end
 
+package macro_pkg;
 endpackage
